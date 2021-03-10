@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <el-form ref="settingForm" :model="settingForm" :rules="rules" label-position="left" label-width="100px">
+    <el-form ref="settingForm" :model="settingForm" :rules="rules" label-position="left" label-width="140px">
       <div class="form-content-item">
         <!-- <div class="block-title"><card-tag :tag-name="$t('微信设置')" /></div> -->
         <div class="block-content">
@@ -38,6 +38,23 @@
               <el-button size="small" type="primary">{{ $t('上传证书文件') }}</el-button>
             </el-upload>
           </el-form-item>
+          <el-form-item :label="$t('微信验证文件')" prop="verify_file">
+            <el-upload
+              class="upload-demo"
+              name="verify_file"
+              :action="baseUrl+'/file/uploadVerify'"
+              :headers="{'adm_sign': adm_sign}"
+              :on-change="wxVerifyHandleChange"
+              :file-list="wxVerifyList"
+              :on-remove="wxVerifyRemoveFile"
+              :on-success="wxVerifyUploadSuccess"
+              :with-credentials="true"
+              :limit="1"
+              :on-exceed="uploadExceed"
+            >
+              <el-button size="small" type="primary">{{ $t('上传微信验证文件') }}</el-button>
+            </el-upload>
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" size="small" @click="submitForm('settingForm')">{{ $t('保存') }}</el-button>
             <el-button size="small" @click="resetForm('settingForm')">{{ $t('重置') }}</el-button>
@@ -58,13 +75,15 @@ export default {
       baseUrl: process.env.VUE_APP_BASE_API,
       adm_sign: getToken(),
       fileList: [],
+      wxVerifyList: [],
       settingForm: {
         mch_id: '',
         wxpay_key: '',
         appid: '',
         appsecret: '',
         url: '',
-        wxpay_cert_p12: ''
+        wxpay_cert_p12: '',
+        verify_file: ''
       },
       rules: {
         mch_id: [
@@ -96,9 +115,13 @@ export default {
     getSetting() {
       settingApi.getWxConfig().then(res => {
         this.settingForm = res.data
-        this.fileList.push({
+        res.data.wxpay_cert_p12 && this.fileList.push({
           name: res.data.wxpay_cert_p12,
           url: res.data.wxpay_cert_p12
+        })
+        res.data.verify_file && this.wxVerifyList.push({
+          name: res.data.verify_file,
+          url: res.data.verify_file
         })
       })
     },
@@ -122,19 +145,39 @@ export default {
     handleChange(file, fileList) {
       this.fileList = fileList.slice(-3)
     },
+    wxVerifyHandleChange(file, fileList) {
+      this.wxVerifyList = fileList.slice(-3)
+    },
     uploadExceed() {
       this.$message({
         type: 'warning',
         message: `${this.$t('超出文件数量限制')},${this.$t('请先删除原文件后重新选择')}!`
       })
     },
+    wxVerifyRemoveFile(file, fileList) {
+      this.settingForm.verify_file = ''
+      this.wxVerifyList = []
+    },
     removeFile(file, fileList) {
-      console.log(file)
       this.settingForm.wxpay_cert_p12 = ''
       this.fileList = []
     },
+    wxVerifyUploadSuccess(res) {
+      if (res.code === 0) {
+        this.wxVerifyList.push({
+          name: res.data.url,
+          url: res.data.url
+        })
+        this.settingForm.verify_file = res.data.url
+      } else {
+        this.wxVerifyList = []
+        this.$message({
+          type: 'error',
+          message: this.$t(...res.msg)
+        })
+      }
+    },
     uploadSuccess(res) {
-      console.log(res)
       this.fileList.push({
         name: res.data.url,
         url: res.data.url

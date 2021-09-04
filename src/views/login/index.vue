@@ -6,7 +6,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">{{ $t('账号登录') }}</h3>
+        <h3 class="title">云易绣{{ $t('账号登录') }}</h3>
       </div>
 
       <el-form-item prop="username">

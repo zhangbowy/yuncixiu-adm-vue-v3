@@ -50,7 +50,21 @@
             <el-col v-for="item in figureList" :key="item.design_id" class="list-item">
               <el-card :body-style="{ padding: '0px' }" shadow="hover" class="figure-item">
                 <!-- <img v-lazy="item.prev_png_path" :src="item.prev_png_path" class="image"> -->
-                <el-image :key="item.design_id" class="image" :src="item.prev_png_path" lazy fit="contain" />
+                <el-tooltip placement="top">
+                  <div slot="content">
+                    <div>
+                      最佳高度: {{item.best_height}}mm
+                    </div>
+                    <div>
+                      最大高度: {{item.max_height}}mm
+                    </div>
+                    <div>
+                      最小高度: {{item.min_height}}mm
+                    </div>
+                  </div>
+                  <el-image :key="item.design_id" class="image" :src="item.prev_png_path" lazy fit="contain" />
+                </el-tooltip>
+                <!-- <el-image :key="item.design_id" class="image" :src="item.prev_png_path" lazy fit="contain" /> -->
                 <div style="padding: 14px; font-szie: 12px">
                   <span>{{ item.design_name }}</span>
                   <div class="figure-item_designer">
@@ -147,7 +161,8 @@ export default {
         checkStrictly: true,
         expandTrigger: 'hover',
         value: 'id',
-        label: 'category_name'
+        label: 'category_name',
+        multiple: true
       },
       form: {
         design_category_id: '',
@@ -215,6 +230,7 @@ export default {
       _this.$refs[formName].validate((valid) => {
         if (valid) {
           const design_category_list = _this.form.design_category_id
+          debugger
           const design_category_id = Array.isArray(design_category_list) ? design_category_list[design_category_list.length - 1] : design_category_list
           _this.form.design_category_id = design_category_id
           figureApi.setCategory(_this.form).then(res => {
@@ -345,6 +361,7 @@ export default {
           width: 100%;
           height: 200px;
           display: block;
+          cursor: pointer;
         }
       }
       .list-item:nth-child(7n+7) {

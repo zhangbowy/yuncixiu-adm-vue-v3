@@ -111,7 +111,14 @@
                     size="mini"
                     type="primary"
                     @click="dispatch(7, item)"
+                    class="dispatch-order-button"
                   >{{ $t('派单') }}</el-button>
+                  <el-button
+                  v-has="506"
+                  size="mini"
+                  type="primary"
+                  @click="refund(item)"
+                >{{ $t('驳回&退款') }}</el-button>
                 </div>
                 <div v-if="item.status==2" class="operate-btn">
                   <p>{{ $t('等待商家发货') }}</p>
@@ -723,6 +730,26 @@ export default {
     },
     onCheckboxGroupChange(value) {
       this.$emit('checkboxChange', value)
+    },
+    // 管理后台退款
+    refund($item) {
+      this.$confirm(this.$t(`是否确认取消该订单，并退款给客户,是否继续?`), `${this.$t('提示')}`, {
+        confirmButtonText: `${this.$t('确定')}`,
+        cancelButtonText: `${this.$t('取消')}`,
+        type: 'warning'
+      }).then(() => {
+        orderApi.refund({
+          order_no: $item.order_no
+        }).then(res => {
+          this.$message({
+            type: 'success',
+            message: this.$t(...res.msg)
+          })
+        })
+        this.getOrderList()
+      }).catch(() => {
+
+      })
     }
   }
 }
@@ -835,5 +862,8 @@ export default {
   .el-checkbox__label{
     display: none;
   }
+}
+.dispatch-order-button {
+  margin-bottom: 5px;
 }
 </style>

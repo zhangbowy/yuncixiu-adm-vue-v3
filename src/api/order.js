@@ -139,5 +139,18 @@ export const orderApi = {
       method: 'post',
       data
     })
+  },
+  /**
+   * 退款
+   */
+  refund(data) {
+    return request({
+      url: '/order/refund',
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8'
+      },
+      data
+    })
   }
 }

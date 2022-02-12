@@ -162,7 +162,7 @@ export default {
         expandTrigger: 'hover',
         value: 'id',
         label: 'category_name',
-        multiple: true
+        // multiple: true
       },
       form: {
         design_category_id: '',

@@ -1,17 +1,18 @@
 <template>
   <div class="login-container">
     <section class="login-container_header">
+      <span class="agent—login-btn" @click="onClick_agentLogin">代理商登陆</span>
       <language-selector />
     </section>
     <div class="form-wrap">
       <div class="inner">
-        <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
+        <el-form ref="loginForm" :model="loginForm" :rules="!isAgent?loginRules:agentRules" class="login-form" auto-complete="on" label-position="left">
           <div class="login-logo">
             <img src="../../assets/images/login/logo.png" alt="">
           </div>
   
           <div class="title-container">
-            <h3 class="title">云易绣商家后台{{ $t('登录') }}</h3>
+            <h3 class="title">{{!isAgent ? '云易绣商家后台' : '云易绣代理商' }}{{ $t('登录') }}</h3>
           </div>
     
           <el-form-item prop="username">
@@ -48,7 +49,8 @@
               <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
             </span>
           </el-form-item>
-          <el-form-item prop="code">
+
+          <el-form-item prop="code" v-if="!isAgent">
             <span class="svg-container">
               <svg-icon icon-class="vercode" />
             </span>
@@ -97,8 +99,8 @@ export default {
     //   }
     // }
     const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error(`${this.$t('密码不能小于6位')}`))
+      if (value.length < 1) {
+        callback(new Error(`${this.$t('密码不能小于1位')}`))
       } else {
         callback()
       }
@@ -115,9 +117,14 @@ export default {
         password: [{ required: true, trigger: 'blur', validator: validatePassword }],
         code: [{ required: true, trigger: 'blur', message: `${this.$t('验证码不能为空')}` }]
       },
+      agentRules: {
+        username: [{ required: true, trigger: 'blur', message: `${this.$t('用户名不能为空')}` }],
+        password: [{ required: true, trigger: 'blur', validator: validatePassword }],
+      },
       loading: false,
       passwordType: 'password',
-      redirect: undefined
+      redirect: undefined,
+      isAgent: false
     }
   },
   watch: {
@@ -133,6 +140,9 @@ export default {
   },
 
   methods: {
+    onClick_agentLogin() {
+      this.isAgent = true;
+    },
     changeCode() {
       const captcha_key = this.getCaptchaKey()
       this.loginForm.captcha_key = captcha_key
@@ -162,7 +172,8 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
+          const k = !this.isAgent ? 'user/login' : 'user/loginAgent'
+          this.$store.dispatch(k, this.loginForm).then(() => {
             // 获取用户数据
             // this.$store.dispatch('user/getInfo')
             this.$router.push({ path: this.redirect || '/' })
@@ -381,5 +392,14 @@ footer .beian {
   bottom: .29rem;
   width: 100%;
   text-align: center;
+}
+
+.agent—login-btn {
+  margin-top: 3px;
+  margin-right: 10px;
+  cursor: pointer;
+  color:blueviolet;
+  text-decoration: underline;
+  
 }
 </style>

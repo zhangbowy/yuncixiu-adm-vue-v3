@@ -8,6 +8,14 @@ export function login(data) {
   })
 }
 
+export function loginAgent(data) {
+  return request({
+    url: '/agent/login',
+    method: 'post',
+    data
+  })
+}
+
 export function getInfo(params) {
   return request({
     url: '/admin/info',

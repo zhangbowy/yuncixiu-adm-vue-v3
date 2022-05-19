@@ -39,12 +39,13 @@ module.exports = {
     },
     proxy: {
       '/api': {
-        target: 'http://cxadm.tecqm.club',
+        // target: 'http://waimao_test.yuneshow.com',
+        target: 'http://127.0.0.1:9001',
         changeOrigin: true,
         // ws: true,
         logLevel: 'info',
         pathRewrite: {
-          '^/api': '/api'
+          '^/api': ''
         }
       }
     },

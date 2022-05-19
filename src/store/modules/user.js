@@ -1,4 +1,4 @@
-import { login, logout, getInfo, checkLogin } from '@/api/user'
+import { loginAgent, login, logout, getInfo, checkLogin } from '@/api/user'
 import { getToken, setToken, removeToken, getAdminId, setAdminId, removeAdminId } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
@@ -46,6 +46,23 @@ const actions = {
     })
   },
 
+  // agent login
+  loginAgent({ commit }, userInfo) {
+    // const { username, password, code } = userInfo
+    userInfo.account = userInfo.username
+    return new Promise((resolve, reject) => {
+      loginAgent(userInfo).then(response => {
+        const { data } = response
+        commit('SET_STATUS', data)
+        setToken(data.token)
+        setAdminId(data.adminId)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
   // get user info
   getInfo({ commit }) {
     return new Promise((resolve, reject) => {
@@ -56,7 +73,11 @@ const actions = {
         }
         const { admin_info, authority_list } = data
         commit('SET_ADMIN_INFO', admin_info)
-        commit('SET_ADMIN_PERMISSION', authority_list)
+        if (admin_info.loginType && admin_info.loginType === 2) {
+          commit('SET_ADMIN_PERMISSION', [1, 10,3,12])
+        } else {
+          commit('SET_ADMIN_PERMISSION', authority_list)
+        }
         resolve(data)
       }).catch(error => {
         reject(error)

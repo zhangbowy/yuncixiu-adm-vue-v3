@@ -33,7 +33,10 @@ router.beforeEach(async(to, from, next) => {
       } else {
         // 没有请求用户信息，获取权限表
         store.dispatch('user/getInfo').then(async res => {
-          const permission = res.authority_list
+          let permission = res.authority_list
+          if (res.admin_info.loginType && res.admin_info.loginType == 2) {
+            permission = [2, 11]
+          }
           // 获取语言包
           await store.dispatch('settings/getLanguage', { currentPage: 1, pageSize: 1000, platform: 1 })
           store.dispatch('GenerateRoutes', permission).then(() => { // 根据roles权限生成可访问的路由表

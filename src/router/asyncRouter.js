@@ -37,15 +37,15 @@ export const asyncRouter = [
   },
   {
     pid: 0,
-    id: 2,
+    id: 30000,
     path: '/agentManage',
     component: Layout,
     alwaysShow: true,
     redirect: '/agentManage/agentList',
     meta: { title: '代理商管理', icon: 'shop' },
     children: [{
-      pid: 2,
-      id: 11,
+      pid: 30000,
+      id: 30001,
       path: 'agentList',
       name: 'agentList',
       component: () => import('@/views/agentManage/shop/list'),

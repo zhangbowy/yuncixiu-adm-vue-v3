@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import store from '@/store'
 export default {
   name: 'SidebarLogo',
   props: {
@@ -24,8 +25,13 @@ export default {
   },
   data() {
     return {
-      title: '管理后台',
+      // title: '管理后台',
       logo: '@/assets/images/logo.png'
+    }
+  },
+  computed: {
+    title() {
+      return store.getters.adminInfo.loginType === 2 ? '代理商管理后台' : '管理后台'
     }
   }
 }

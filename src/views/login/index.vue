@@ -1,6 +1,7 @@
 <template>
   <div class="login-container">
     <section class="login-container_header">
+      <span class="agent—login-btn" ><a href="http://www.yuneshow.com">云易绣官网</a></span>
       <span class="agent—login-btn" @click="onClick_agentLogin">代理商登陆</span>
       <language-selector />
     </section>

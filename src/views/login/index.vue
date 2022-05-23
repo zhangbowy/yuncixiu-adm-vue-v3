@@ -2,7 +2,8 @@
   <div class="login-container">
     <section class="login-container_header">
       <span class="agent—login-btn" ><a href="http://www.yuneshow.com">云易绣官网</a></span>
-      <span class="agent—login-btn" @click="onClick_agentLogin">代理商登陆</span>
+      <span class="agent—login-btn" @click="onClick_agentLogin(true)" v-if="!isAgent">代理商登陆</span>
+      <span class="agent—login-btn" @click="onClick_agentLogin(false)" v-else>商家登陆</span>
       <language-selector />
     </section>
     <div class="form-wrap">
@@ -141,8 +142,8 @@ export default {
   },
 
   methods: {
-    onClick_agentLogin() {
-      this.isAgent = true;
+    onClick_agentLogin(val) {
+      this.isAgent = !!val;
     },
     changeCode() {
       const captcha_key = this.getCaptchaKey()

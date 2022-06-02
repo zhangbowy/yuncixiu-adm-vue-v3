@@ -139,10 +139,10 @@
     <!-- 店铺新增，详情，编辑弹框 -->
     <el-dialog v-dialogDrag center :title="dialogType=='add'? '新增代理商': dialogType=='edit'? `${$t('编辑代理商')}`: `${$t('代理商详情')}`" :visible.sync="dialogFormVisible">
       <el-form ref="shopForm" :model="shopForm" :rules="rules" label-width="100px" label-position="left" size="small">
-        <el-form-item :label="$t('经销商名称')" prop="agent_name">
+        <el-form-item :label="$t('代理商名称')" prop="agent_name">
           <el-input v-model="shopForm.agent_name " :disabled="dialogType=='detail'" />
         </el-form-item>
-        <el-form-item :label="$t('经销商账号')" prop="agent_account">
+        <el-form-item :label="$t('代理商账号')" prop="agent_account">
           <el-input v-model="shopForm.agent_account " :disabled="dialogType=='detail' || dialogType=='edit'" />
         </el-form-item>
         <el-form-item :label="$t('授权数量')" prop="total_number">
